@@ -64,19 +64,18 @@ class App extends Component {
     this.setState({imageUrl: this.state.input});
     app.models
       .predict(
-       Clarifai.CELEBRITY_MODEL,
+        Clarifai.CELEBRITY_MODEL,
       //Clarifai.FACE_DETECT_MODEL,
         this.state.input)
-      .then(response => 
-           
-        console.log(response.outputs[0].data.regions[0].data.concepts[0].name,
-          response.outputs[0].data.regions[0].region_info.bounding_box
-          ))
-            
-        //             this.displayFaceBox (this.calculateFaceLocation(response)))
-       
-      .catch(err => console.log(err));    
-    }
+          .then(response => this.displayFaceBox (this.calculateFaceLocation(response)))
+          .catch(err => console.log(err));    
+    app.models
+      .predict(
+        Clarifai.CELEBRITY_MODEL,
+        this.state.input)
+          .then(response=> console.log(response.outputs[0].data.regions[0].data.concepts[0].name))
+          .catch(err => console.log(err));    
+  }
   
   onRouteChange = (route) => {
     if (route === 'signout') {
