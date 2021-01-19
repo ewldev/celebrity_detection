@@ -7,7 +7,7 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Name from './components/Name/Name';
+//import Name from './components/Name/Name';
 import './App.css';
 
 const app = new Clarifai.App({
@@ -27,16 +27,17 @@ const particlesOptions = {
 }
 
 class App extends Component {
-  constructor() {
-    super();
-      this.state ={
+   constructor() {
+     super();
+       this.state = {
         input: '',
         imageUrl: '',
         box: {},
+        name: '',
         route: 'signin',
         isSignedIn: false
-      }
-  }
+       }
+   }
 
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -56,6 +57,13 @@ class App extends Component {
     this.setState({box: box});
   }
 
+  displayName = (data) => {
+    const name = data.outputs[0].data.regions[0].data.concepts[0].name
+    console.log(name)
+    this.setState({name: name})
+    
+  }
+
   onInputChange =(event) => {
     this.setState ({input: event.target.value});
   }
@@ -73,7 +81,7 @@ class App extends Component {
       .predict(
         Clarifai.CELEBRITY_MODEL,
         this.state.input)
-          .then(response=> console.log(response.outputs[0].data.regions[0].data.concepts[0].name))
+          .then(response=> this.displayName(response))
           .catch(err => console.log(err));    
   }
   
@@ -87,7 +95,7 @@ class App extends Component {
   }
    
   render(){
-    const { isSignedIn, imageUrl, route, box } = this.state;
+    const { isSignedIn, imageUrl, route, box, name } = this.state;
     return (
       <div className="App">
       <Particles className='particles' 
@@ -101,8 +109,7 @@ class App extends Component {
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <FaceRecognition box={box} imageUrl={imageUrl} />
-              <Name />
+              <FaceRecognition box={box} imageUrl={imageUrl} name={name} />
             </div>  
           : (
               route === 'signin'  
