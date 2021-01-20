@@ -1,14 +1,11 @@
 import React from 'react';
 
-const Name = () => {
+const Name = ({name}) => {
+    console.log('check2',name)
     return (
         <div>
-            <div className='white f3'>
-                {`The celebrity in your picture is...`}
-            </div>
-            <div className='white f1'>
-                 {}
-            </div>
+            <p className='white f4'> {'The celebrity in your picture is...'}</p>
+            <p className='white f3'>{name}</p>
         </div>
     );
 }

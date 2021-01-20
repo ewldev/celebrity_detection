@@ -7,7 +7,7 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-//import Name from './components/Name/Name';
+import Name from './components/Name/Name';
 import './App.css';
 
 const app = new Clarifai.App({
@@ -57,12 +57,15 @@ class App extends Component {
     this.setState({box: box});
   }
 
+  // displayName = (data) => {
+  //   const name = data.outputs[0].data.regions[0].data.concepts[0].name
+  //   this.setState({name: name})
+  // }
   displayName = (data) => {
     const name = data.outputs[0].data.regions[0].data.concepts[0].name
     console.log(name)
     this.setState({name: name})
-    
-  }
+  } 
 
   onInputChange =(event) => {
     this.setState ({input: event.target.value});
@@ -109,7 +112,8 @@ class App extends Component {
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <FaceRecognition box={box} imageUrl={imageUrl} name={name} />
+              <Name name={name} />
+              <FaceRecognition box={box} imageUrl={imageUrl} />
             </div>  
           : (
               route === 'signin'  
