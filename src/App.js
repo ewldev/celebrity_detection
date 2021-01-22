@@ -11,7 +11,7 @@ import Name from './components/Name/Name';
 import './App.css';
 
 const app = new Clarifai.App({
-  apiKey: 'af8ce459695542f5b8c97e528864eee1'
+  apiKey: ''
 });
 
 const particlesOptions = {
@@ -76,6 +76,7 @@ class App extends Component {
       //Clarifai.FACE_DETECT_MODEL,
         this.state.input)
           .then(response => this.displayFaceBox (this.calculateFaceLocation(response)))
+          //.then (response => console.log('this.calculateFaceLocation(response)',this.calculateFaceLocation(response))) //equals new state of box
           .catch(err => console.log(err));    
     app.models
       .predict(
