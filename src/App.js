@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Particles from 'react-particles-js';
+import React, { Component } from 'react'
+import Particles from 'react-particles-js'; // eslint-disable-line semi
 import Clarifai from 'clarifai';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Navigation from './components/Navigation/Navigation';
@@ -11,8 +11,8 @@ import Name from './components/Name/Name';
 import './App.css';
 
 const app = new Clarifai.App({
-  apiKey: ''
- });
+  apiKey: 'af8ce459695542f5b8c97e528864eee1'
+});
 
 const particlesOptions = {
   particles: {
@@ -44,6 +44,7 @@ class App extends Component {
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
+    console.log('clarifaiFace', clarifaiFace);
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
@@ -53,14 +54,10 @@ class App extends Component {
   }
   
   displayFaceBox = (box) => {
-    //console.log(box);
     this.setState({box: box});
+    console.log('detect', box);
   }
 
-  // displayName = (data) => {
-  //   const name = data.outputs[0].data.regions[0].data.concepts[0].name
-  //   this.setState({name: name})
-  // }
   displayName = (data) => {
     const name = data.outputs[0].data.regions[0].data.concepts[0].name
     console.log(name)
@@ -98,7 +95,8 @@ class App extends Component {
   }
    
   render(){
-    const { isSignedIn, imageUrl, route, box, name } = this.state;
+    const { isSignedIn, route, name, box, imageUrl } = this.state;
+    console.log('render imageUrl', imageUrl, 'box', box )
     return (
       <div className="App">
       <Particles className='particles' 

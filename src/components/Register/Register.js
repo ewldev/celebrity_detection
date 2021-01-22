@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 
 const Register = ({ onRouteChange }) => {
     return (
@@ -34,5 +34,9 @@ const Register = ({ onRouteChange }) => {
         </article>
     );
 }
+
+Register.propTypes = {
+    onRouteChange: PropTypes.func.isRequired
+};
 
 export default Register;
