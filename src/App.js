@@ -32,30 +32,32 @@ class App extends Component {
        this.state = {
         input: '',
         imageUrl: '',
-        box: {},
+        boxes: [],
         name: '',
         route: 'signin',
         isSignedIn: false
        }
    }
 
-  calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById('inputimage');
-    const width = Number(image.width);
-    const height = Number(image.height);
-    console.log('clarifaiFace', clarifaiFace);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
-    }
+  calculateFaceLocations = (data) => {
+    return data.outputs[0].data.regions.map(face => {
+      const clarifaiFace = face.region_info.bounding_box;
+      const image = document.getElementById('inputimage');
+      const width = Number(image.width);
+      const height = Number(image.height);
+      console.log('clarifaiFace', clarifaiFace);
+      return {
+        leftCol: clarifaiFace.left_col * width,
+        topRow: clarifaiFace.top_row * height,
+        rightCol: width - (clarifaiFace.right_col * width),
+        bottomRow: height - (clarifaiFace.bottom_row * height)      
+      }  
+    });  
   }
   
-  displayFaceBox = (box) => {
-    this.setState({box: box});
-    console.log('detect', box);
+  displayFaceBoxes = (boxes) => {
+    this.setState({boxes: boxes});
+    console.log('detect', boxes);
   }
 
   displayName = (data) => {
@@ -75,11 +77,15 @@ class App extends Component {
         Clarifai.CELEBRITY_MODEL,
       //Clarifai.FACE_DETECT_MODEL,
         this.state.input)
-          .then(response => this.displayFaceBox (this.calculateFaceLocation(response)))
-          //.then (response => console.log('this.calculateFaceLocation(response)',this.calculateFaceLocation(response))) //equals new state of box
+         // .then(response => this.displayFaceBox (this.calculateFaceLocations(response)))
+         .then (response => {
+           console.log('response',response);
+           this.displayFaceBoxes (this.calculateFaceLocations(response))
+         })
+        //.then (response => console.log('this.calculateFaceLocations(response)',this.calculateFaceLocatios(response))) //equals new state of box
           .catch(err => console.log(err));    
     app.models
-      .predict(
+     .predict(
         Clarifai.CELEBRITY_MODEL,
         this.state.input)
           .then(response=> this.displayName(response))
@@ -96,8 +102,8 @@ class App extends Component {
   }
    
   render(){
-    const { isSignedIn, route, name, box, imageUrl } = this.state;
-    console.log('render imageUrl', imageUrl, 'box', box )
+    const { isSignedIn, route, name, boxes, imageUrl } = this.state;
+    console.log('render imageUrl', imageUrl, 'boxes', boxes )
     return (
       <div className="App">
       <Particles className='particles' 
@@ -112,7 +118,7 @@ class App extends Component {
                 onButtonSubmit={this.onButtonSubmit}
               />
               <Name name={name} />
-              <FaceRecognition box={box} imageUrl={imageUrl} />
+              <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
             </div>  
           : (
               route === 'signin'  
